@@ -43,6 +43,15 @@ LOADSPRITEOAM:
     STA $0201           ; set sprite 0's tile number to zero (http://wiki.nesdev.com/w/index.php?title=PPU_OAM#Byte_1)
     ;LDA #$01           ; (use values 0-3 for the different sprite palettes)
     STA $0202           ; set sprite 0 to use sprite palette 0, and don't flip it (http://wiki.nesdev.com/w/index.php?title=PPU_OAM#Byte_2)
+    ; set up another sprite's OAM values
+    LDA #$8A
+    STA $0204           ; set sprite 1's Y coordinate to $8A
+    LDA #$80
+    STA $0207           ; set sprite 1's X coordinate to $80
+    LDA #$00
+    STA $0205           ; set sprite 1's tile number to zero
+    LDA #%10000011            
+    STA $0206           ; set sprite 1 to use sprite palette 3 and flip it vertically
 ENABLESPRITES:
     LDA #%10000000
     STA PPU_CTRL        ; enable NMI, and use sprites from pattern table 0
