@@ -1,4 +1,4 @@
-An NES ROM which displays a single sprite on the screen.
+An NES ROM which displays some sprites on the screen.
 
 (Adapted from [Nerdy Nights week 4](http://nintendoage.com/forum/messageview.cfm?catid=22&threadid=6082).)
 
