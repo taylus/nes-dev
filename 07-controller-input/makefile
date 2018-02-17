@@ -1,7 +1,7 @@
 romname = controller-input
 
 run: $(romname).nes
-	fceux bin\$(romname).nes
+	fceux -lua controller-memory-display.lua -allowUDLR 1 bin\$(romname).nes
 
 $(romname).nes: $(romname).o
 	ld65 bin\$(romname).o -o bin\$(romname).nes --config nes.cfg -v
