@@ -9,6 +9,7 @@
 SPRITE_X = $0203
 SPRITE_Y = $0200
 
+; variables in work RAM
 .segment "ZEROPAGE"
 buttons: .res 1             ; store controller #1 button states in $00
 
@@ -27,22 +28,7 @@ vblank_wait_1:              ; first wait for vblank to make sure the PPU is read
 vblank_wait_2:              ; second wait for vblank; PPU is ready for drawing after this
     lda PPU_STATUS
     bpl vblank_wait_2
-load_bg:                    ; write ascending values $00-$FF to nametable zero at PPU memory address $2000
-    lda PPU_STATUS          ; read PPU_STATUS to force the high/low PPU_ADDR latch to high
-    lda #$20
-    sta PPU_ADDR            ; write the high byte of $2000, the nametable we're writing background tile #s to
-    lda #$00
-    sta PPU_ADDR            ; write the low byte of $2000, the nametable we're writing background tile #s to
-    ldy #$04                ; outer loop Y 4 times
-ld_bg_outer_loop:
-    ldx #$00                ; inner loop X 256 times (to fill 4 x 256 = 1024 bytes of nametable + attribute table data)
-load_bg_inner_loop:
-    stx PPU_DATA
-    inx
-    bne load_bg_inner_loop
-    dey
-    bne ld_bg_outer_loop
-    ;jsr clear_attribute_table ; comment this out for a technicolor nightmare (attribute table set to various colors)
+    load_nametable nametable, $2000
 load_palette:
     lda PPU_STATUS          ; read PPU_STATUS to force the high/low PPU_ADDR latch to high
     lda #$3F
@@ -162,11 +148,15 @@ loop:
     rts
 .endproc
 
-; TODO: layout a real background with real tiles instead of just counting tiles
 nametable:
     .byte $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24
     .byte $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24
-    ; ...
+    ; TODO: finish level
+    .res 928, 0
+    
+attribute_table:
+    ; TODO: set background colors w/ 2 bits for every 2x2 tile block
+    .res 64, 0
     
 palette_data:
     ; available colors: https://wiki.nesdev.com/w/index.php/PPU_palettes#2C02
