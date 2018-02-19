@@ -17,30 +17,30 @@ BUTTON_RIGHT = 1
 ; Taken from https://wiki.nesdev.com/w/index.php/Controller_Reading
 ; This subroutine loops 8 times, reading controller #1's state into
 ; the "buttons" variable according to the bit flags above
-.proc ReadJoypad1
-    LDA #$01
+.proc read_joypad1
+    lda #$01
     ; While the strobe bit is set, buttons will be continuously reloaded.
     ; This means that reading from JOYPAD1 will only return the state of the first button (A)
-    STA JOYPAD1
-    STA buttons
-    LSR A           ; now A is 0
+    sta JOYPAD1
+    sta buttons
+    lsr a           ; now A is 0
     ; By storing 0 into JOYPAD1, the strobe bit is cleared and the reloading stops.
     ; This allows all 8 buttons (newly reloaded) to be read from JOYPAD1
-    STA JOYPAD1
-LOOP:
-    LDA JOYPAD1
-    LSR A           ; bit0 -> Carry
-    ROL buttons     ; Carry -> bit0; bit 7 -> Carry
-    BCC LOOP
-    RTS
+    sta JOYPAD1
+loop:
+    lda JOYPAD1
+    lsr a           ; bit0 -> Carry
+    rol buttons     ; Carry -> bit0; bit 7 -> Carry
+    bcc loop
+    rts
 .endproc
 
 ; example usage:
-; JSR ReadJoypad1
-; LDA buttons
-; AND #BUTTON_A
-; BEQ A_HANDLING_DONE
+; jsr read_joypad1
+; lda buttons
+; and #BUTTON_A
+; beq a_handling_done
 ; ... A was pressed
 ; ... handle it here
-; A_HANDLING_DONE:
+; a_handling_done:
 ; ... continue
