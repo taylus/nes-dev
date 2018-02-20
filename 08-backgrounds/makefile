@@ -1,7 +1,7 @@
 romname = backgrounds
 
 run: $(romname).nes
-	fceux -pal 1 bin\$(romname).nes
+	fceux bin\$(romname).nes
 
 $(romname).nes: $(romname).o
 	ld65 bin\$(romname).o -o bin\$(romname).nes --config nes.cfg -v

@@ -22,6 +22,19 @@ buttons: .res 1             ; store controller #1 button states in $00
 reset:                      ; adapted from https://wiki.nesdev.com/w/index.php/Init_code
     sei                     ; disable IRQs
     cld                     ; disable decimal mode
+clear_memory:
+  lda #$00
+  sta $0000, x
+  sta $0100, x
+  sta $0300, x
+  sta $0400, x
+  sta $0500, x
+  sta $0600, x
+  sta $0700, x
+  lda #$FE                  ; move all sprites off the screen
+  sta $0200, x
+  inx
+  bne clear_memory
 vblank_wait_1:              ; first wait for vblank to make sure the PPU is ready
     lda PPU_STATUS
     bpl vblank_wait_1
@@ -49,9 +62,8 @@ load_sprite_oam:
     lda #$80
     sta SPRITE_Y        ; set sprite 0's top Y coordinate to $80 (near the center of the screen) (http://wiki.nesdev.com/w/index.php?title=PPU_OAM#Byte_0)
     sta SPRITE_X        ; set sprite 0's left X coordinate likewise (http://wiki.nesdev.com/w/index.php?title=PPU_OAM#Byte_3)
-    lda #$01
-    sta $0201           ; set sprite 0's tile number (http://wiki.nesdev.com/w/index.php?title=PPU_OAM#Byte_1)
     lda #$00
+    sta $0201           ; set sprite 0's tile number (http://wiki.nesdev.com/w/index.php?title=PPU_OAM#Byte_1)
     sta $0202           ; set sprite 0 to use sprite palette 0, and don't flip it (http://wiki.nesdev.com/w/index.php?title=PPU_OAM#Byte_2)
 enable_ppu:
     lda #%10010000
@@ -149,38 +161,24 @@ loop:
 .endproc
 
 nametable:
-    .byte $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24
-    .byte $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24, $24
-    ; TODO: finish level
-    .res 928, 0
-    
-attribute_table:
-    ; TODO: set background colors w/ 2 bits for every 2x2 tile block
-    .res 64, 0
+    .incbin "gfx\mariobg.nam"
     
 palette_data:
     ; available colors: https://wiki.nesdev.com/w/index.php/PPU_palettes#2C02
     ; background colors to be loaded into $3F00
-    .byte $0F             ; universal background color
-    .byte $2D, $10, $1D   ; background palette 0 (grays)
-    .byte $0F             ; ignored
-    .byte $16, $27, $18   ; background palette 1 (reds)
-    .byte $0F             ; ignored
-    .byte $19, $2A, $1B   ; background palette 2 (greens)
-    .byte $0F             ; ignored
-    .byte $11, $22, $13   ; background palette 3 (blues)
+    .incbin "gfx\mariobg.pal"
     ; sprite colors to be loaded into $3F10
-    .byte $0F             ; ignored
+    .byte $22             ; universal background color
     .byte $17, $28, $06   ; sprite palette 0 (brown, yellow, darker brown)
-    .byte $0F             ; ignored
+    .byte $22             ; ignored
     .byte $16, $27, $18   ; sprite palette 1 (reds)
-    .byte $0F             ; ignored
+    .byte $22             ; ignored
     .byte $19, $2A, $1B   ; sprite palette 2 (greens)
-    .byte $0F             ; ignored
+    .byte $22             ; ignored
     .byte $11, $22, $13   ; sprite palette 3 (blues)
 
 .segment "VECTORS"
     .word nmi, reset, 0
     
 .segment "CHARS"
-    .incbin "graphics.chr"
+    .incbin "gfx\mario.chr"
