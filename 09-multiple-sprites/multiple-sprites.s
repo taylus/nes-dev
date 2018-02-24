@@ -71,6 +71,7 @@ loop:
     jmp loop            ; loop forever
     
 nmi:
+    jsr sprite_shuffle
     ; non-maskable interrupt handler called every vblank between drawing frames
     ; performs a DMA copy of sprite data from RAM address $0200-$02FF to the PPU's OAM
     lda #$00
@@ -138,6 +139,32 @@ right_done:
     clc
     adc #$01
     sta SPRITE_X
+    rts
+.endproc
+
+; sprite drawing priority is determined by position in memory (lower = drawn first)
+; swap sprites 7 and 8 to induce flicker when there are > 8 sprites per scanlnie
+.proc sprite_shuffle
+    ; swap y position bytes
+    ldx $021C
+    ldy $0220
+    stx $0220
+    sty $021C
+    ; swap tile # bytes
+    ldx $021D
+    ldy $0221
+    stx $0221
+    sty $021D
+    ; swap attribute bytes
+    ldx $021E
+    ldy $0222
+    stx $0222
+    sty $021E
+    ; swap x position bytes
+    ldx $021F
+    ldy $0223
+    stx $0223
+    sty $021F
     rts
 .endproc
 
