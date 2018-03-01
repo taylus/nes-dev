@@ -16,18 +16,18 @@ reset:                      ; adapted from https://wiki.nesdev.com/w/index.php/I
     sei                     ; disable IRQs
     cld                     ; disable decimal mode
 clear_memory:
-  lda #$00
-  sta $0000, x
-  sta $0100, x
-  sta $0300, x
-  sta $0400, x
-  sta $0500, x
-  sta $0600, x
-  sta $0700, x
-  lda #$FE                  ; move all sprites off the screen
-  sta $0200, x
-  inx
-  bne clear_memory
+    lda #$00
+    sta $0000, x
+    sta $0100, x
+    sta $0300, x
+    sta $0400, x
+    sta $0500, x
+    sta $0600, x
+    sta $0700, x
+    lda #$FE                ; move all sprites off the screen
+    sta $0200, x
+    inx
+    bne clear_memory
 vblank_wait_1:              ; first wait for vblank to make sure the PPU is ready
     lda PPU_STATUS
     bpl vblank_wait_1
@@ -50,23 +50,23 @@ load_palette_loop:          ; copy all 32 bytes of palette data into VRAM
     bne load_palette_loop   ; if not, keep looping
 enable_ppu:
     lda #%10010000
-    sta PPU_CTRL        ; enable NMI, background from pattern table 1, sprites from pattern table 0
+    sta PPU_CTRL            ; enable NMI, background from pattern table 1, sprites from pattern table 0
     lda #%00001110
-    sta PPU_MASK        ; disable sprites, enable background, no clipping on left side
+    sta PPU_MASK            ; disable sprites, enable background, no clipping on left side
 loop:
-    jmp loop            ; loop forever
+    jmp loop                ; loop forever
     
 nmi:
     ; palette cycle
     inc FRAME_COUNTER
     lda FRAME_COUNTER
-    and #$07            ; mask out all but the three LSB
-    bne nmi_done        ; branch if non-zero to do this every eighth frame
+    and #$07                ; mask out all but the three LSB
+    bne nmi_done            ; branch if non-zero to do this every eighth frame
     inc CLR_ROT_COUNTER
     lda CLR_ROT_COUNTER
     cmp #$06
     bne nmi_done
-    lda #$00            ; reset color rotation index counter back to zero
+    lda #$00                ; reset color rotation index counter back to zero
     sta CLR_ROT_COUNTER
 nmi_done:
     ; update palette color at PPU address $3F0D
@@ -84,7 +84,7 @@ nmi_done:
     sta PPU_SCROLL
     ; reset PPU control register since writing to PPU_ADDR corrupts it (https://wiki.nesdev.com/w/index.php/Errata#Video)
     lda #%10010000
-    sta PPU_CTRL        ; enable NMI, background from pattern table 1, sprites from pattern table 0
+    sta PPU_CTRL            ; enable NMI, background from pattern table 1, sprites from pattern table 0
     rti
 
 nametable:
