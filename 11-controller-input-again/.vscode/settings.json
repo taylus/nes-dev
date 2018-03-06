@@ -1,0 +1,9 @@
+{
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "files.associations": {
+        "*.inc": "merlin32",
+        "*.asm": "merlin32",
+        "*.s": "merlin32"
+    }
+}
