@@ -52,3 +52,10 @@ OAM_DMA    = $4014       ; http://wiki.nesdev.com/w/index.php?title=PPU_register
     sta PPU_DATA
 .endif
 .endmacro
+
+; writes tile_number to the second byte of the given sprite's OAM data,
+; setting the tile it uses for graphics (see: see http://wiki.nesdev.com/w/index.php?title=PPU_OAM)
+.macro set_sprite_tile sprite_index, tile_number
+    lda #tile_number
+    sta OAM_BASE_ADDR + 1 + (sprite_index * 4)
+.endmacro
