@@ -59,7 +59,7 @@ load_sprite_oam:
     ldx #$00
 load_sprite_loop:
     lda initial_sprite_data, x
-    sta $0200, x
+    sta OAM_BASE_ADDR, x
     inx
     cpx #$24                ; all 36 bytes copied?
     bne load_sprite_loop    ; if not, keep looping
@@ -74,10 +74,10 @@ loop:
 nmi:
     inc frame_counter
 copy_sprite_oam:
-    lda #$00
-    sta OAM_ADDR                ; set the low byte ($00) of the RAM address
-    lda #$02
-    sta OAM_DMA                 ; set the high byte ($02) of the RAM address + start the transfer
+    lda #<OAM_BASE_ADDR
+    sta OAM_ADDR                ; set the low byte of the OAM RAM address
+    lda #>OAM_BASE_ADDR
+    sta OAM_DMA                 ; set the high byte of the OAM RAM address + start the transfer
 animate:
     lda frame_counter
     and #$7F                    ; mask out the most significant bit
