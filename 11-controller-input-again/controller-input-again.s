@@ -175,51 +175,115 @@ input_done:
     sta PPU_SCROLL
     rti
 
-; update nametable for pressing up on the d-pad
+; update nametable and sprites for pressing up on the d-pad
 .proc up_pressed
+    ldx #0
+    stx frame_counter
     ppu_write $2129, $0E
+    set_sprite_tile $0, $0C
+    set_sprite_tile $1, $0D
+    set_sprite_tile $2, $0E
+    set_sprite_tile $3, $1C
+    set_sprite_tile $4, $1D
+    set_sprite_tile $5, $1E
     rts
 .endproc
 
-; update nametable for releasing up on the d-pad
+; update nametable and sprites for releasing up on the d-pad
 .proc up_released
+    ldx #0
+    stx frame_counter
     ppu_write $2129, $0B
+    set_sprite_tile $0, $00
+    set_sprite_tile $1, $01
+    set_sprite_tile $2, $02
+    set_sprite_tile $3, $10
+    set_sprite_tile $4, $11
+    set_sprite_tile $5, $12
     rts
 .endproc
 
-; update nametable for pressing down on the d-pad
+; update nametable and sprites for pressing down on the d-pad
 .proc down_pressed
+    ldx #0
+    stx frame_counter
     ppu_write $2169, $2E
+    set_sprite_tile $0, $09
+    set_sprite_tile $1, $0A
+    set_sprite_tile $2, $0B
+    set_sprite_tile $3, $19
+    set_sprite_tile $4, $1A
+    set_sprite_tile $5, $1B
     rts
 .endproc
 
-; update nametable for releasing down on the d-pad
+; update nametable and sprites for releasing down on the d-pad
 .proc down_released
+    ldx #0
+    stx frame_counter
     ppu_write $2169, $2B
+    set_sprite_tile $0, $00
+    set_sprite_tile $1, $01
+    set_sprite_tile $2, $02
+    set_sprite_tile $3, $10
+    set_sprite_tile $4, $11
+    set_sprite_tile $5, $12
     rts
 .endproc
 
-; update nametable for pressing left on the d-pad 
+; update nametable and sprites for pressing left on the d-pad 
 .proc left_pressed
+    ldx #0
+    stx frame_counter
     ppu_write $2148, $1D
+    set_sprite_tile $0, $23
+    set_sprite_tile $1, $24
+    set_sprite_tile $2, $25
+    set_sprite_tile $3, $33
+    set_sprite_tile $4, $34
+    set_sprite_tile $5, $35
     rts
 .endproc
 
-; update nametable for releasing left on the d-pad 
+; update nametable and sprites for releasing left on the d-pad 
 .proc left_released
+    ldx #0
+    stx frame_counter
     ppu_write $2148, $1A
+    set_sprite_tile $0, $00
+    set_sprite_tile $1, $01
+    set_sprite_tile $2, $02
+    set_sprite_tile $3, $10
+    set_sprite_tile $4, $11
+    set_sprite_tile $5, $12
     rts
 .endproc
     
-; update nametable for pressing right on the d-pad
+; update nametable and sprites for pressing right on the d-pad
 .proc right_pressed
+    ldx #0
+    stx frame_counter
     ppu_write $214A, $1F
+    set_sprite_tile $0, $20
+    set_sprite_tile $1, $21
+    set_sprite_tile $2, $22
+    set_sprite_tile $3, $30
+    set_sprite_tile $4, $31
+    set_sprite_tile $5, $32
     rts
 .endproc
 
-; update nametable for releasing right on the d-pad
+; update nametable and sprites for releasing right on the d-pad
 .proc right_released
+    ldx #0
+    stx frame_counter
     ppu_write $214A, $1C
+    set_sprite_tile $0, $00
+    set_sprite_tile $1, $01
+    set_sprite_tile $2, $02
+    set_sprite_tile $3, $10
+    set_sprite_tile $4, $11
+    set_sprite_tile $5, $12
     rts
 .endproc
 
@@ -282,13 +346,9 @@ input_done:
     cmp #$01            ; eyes open?
     beq close_eyes      ; then close
 open_eyes:              ; else open
-    ;lda #$01
-    ;sta $0205
     set_sprite_tile $1, $1
     rts
 close_eyes:
-    ;lda #$04
-    ;sta $0205
     set_sprite_tile $1, $4
     rts
 .endproc

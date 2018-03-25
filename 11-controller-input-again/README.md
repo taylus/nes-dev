@@ -1,3 +1,3 @@
-An NES ROM which displays an interactive controller on the screen.
+An NES ROM which displays an interactive controller and character on the screen.
 
-![Screenshot](screenshot.png?raw=true "Screenshot")
+![Screenshot](screenshot.gif?raw=true "Screenshot")
