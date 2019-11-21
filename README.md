@@ -1,3 +1,6 @@
+# NES Development
+![NES controller](nes_joypad_chr.png "NES controller")
+
 # Tools
 * [cc65](https://cc65.github.io/cc65/): A freeware C compiler and 6502 assembler/linker
 * [Make (for Windows)](http://gnuwin32.sourceforge.net/packages/make.htm): for running makefiles
